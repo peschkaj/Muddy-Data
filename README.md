@@ -56,5 +56,31 @@ Even though there are many ways to do this, we're going to take a look at three 
 
 ### Entity Attribute Value ###
 
+An Entity Attribute Value (EAV) database tracks relevant facts; we only record the facts that we need. This model is most effective when you have a large number of potential attributes that will not be recorded with each row. Data is recorded as three columns: 
+
+  * *entity* - the described object
+  * *attribute* - the attribute, or a foreign key into a table of attribute definitions
+  * *value* - the value being tracked
+
+An attribute table will contain meta data about the attribute - an ID, name, description, data type, and validation rules for the attribute value. The potential complexity of an attribute table is occasionally mentioned as a reason to avoid the EAV model.
+
+Another potential problem with EAV schemas is called impedance mismatch. The logical and physical schemas are radically different. Even though objects are logically modeled as containing collections of typed objects, they are stored in the database as an association of loosely typed objects with rich meta data.
+
+> Meta data is key to the successful operation of an EAV database. 
+
+### Polymorphic Associations ###
+
+Polymorphic associations are different enough from EAVs to warrant their own discussion. While an EAV database tracks properties of an object with meta data, polymorphic associations track the relationships between objects with meta data.
+
+The most readily visible example of this is an application that supports rich tagging. In this hypothetical application we have many different objects - people, orders, physical facilities, and products. Each of these objects can be tagged with multiple tags. While it's possible to create single tag tables for each (e.g. PeopleTags and ProductTags), it is potentially better to create a single Taggables table that looks something like this:
+
+    CREATE TABLE taggables (
+        taggable_id BIGINT NOT NULL,
+        object_id BIGINT NOT NULL,
+        object_type VARCHAR(50) NOT NULL,
+        tag VARCHAR(50) NOT NULL
+    );
+
+
 
 This Work is licensed under a [Creative Commons Attribution-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/).
